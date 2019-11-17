@@ -20,6 +20,10 @@ class VotingSchemesRunner:
 
     def calculate_voter_happiness():
         pass
+    
+    def calculate_overall_happiness(self, vector_happiness):
+        self.overall_happiness = np.sum(vector_happiness)
+        print("\nOverall Happiness of population is: {}".format(self.overall_happiness))
 
     def plurality_voting(self, preference_matrix):
         preferences = {k:0 for k in preference_matrix[:, 0]}
@@ -60,7 +64,7 @@ class VotingSchemesRunner:
         preferences = {k:0 for k in preference_matrix[:, 0]}
         n_candidates = preference_matrix.shape[0]
         for i in range(n_candidates):
-            borda_factor = len(n_candidates) - i - 1
+            borda_factor = n_candidates - i - 1
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 preferences[element] += counts[index] * borda_factor
