@@ -24,12 +24,14 @@ class TacticalVoting:
             overall_happiness = self.votingrunner.calculate_overall_happiness(happiness_vector)
             candidate_happiness = happiness_vector[candidate_index]
 
-            bullet_preference_matrix = np.copy(self.preference_matrix)
-            bullet_preference_matrix[1:, candidate] = 0
+       
 
             for preference in np.unique(self.preference_matrix):
+
+                bullet_preference_matrix = np.copy(self.preference_matrix)
+                bullet_preference_matrix[1:, candidate] = 0
                 bullet_preference_matrix[0, candidate] = preference
-                print("Candidate Matrix: {}".format(bullet_preference_matrix))
+
                 strategic_voting_results = self.votingrunner.run_voting_simulation(bullet_preference_matrix, self.selected_scheme)
                 del strategic_voting_results[0]
 

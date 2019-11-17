@@ -11,5 +11,4 @@ if __name__ == "__main__":
     tactical_voter = TacticalVoting(preference_matrix, voting_results, selected_scheme)
     if tactical_voter.bullet_voting():
         for candidate_options in tactical_voter.strategic_voting_options:
-
             print("Options for candidate: {}\n".format(candidate_options))
