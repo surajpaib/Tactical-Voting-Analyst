@@ -22,13 +22,13 @@ class VotingSchemesRunner:
         pass
 
     def plurality_voting(self, preference_matrix):
-        preferences = {k:0 for k in preference_matrix[:, 0]}
-
+        preferences = {k: 0 for k in preference_matrix[:, 0]}
+        print(preferences)
         unique, counts = np.unique(preference_matrix[0, :], return_counts=True)
         for index, element in enumerate(unique):
             preferences[element] += counts[index]
-
-        return dict(OrderedDict(preferences))
+        
+        return dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
 
     def voting_for_two(self, preference_matrix):
         """Check for most frequently mentioned preferences in first two columns"""
@@ -40,7 +40,7 @@ class VotingSchemesRunner:
             for index, element in enumerate(unique):
                 preferences[element] += counts[index]
 
-        return dict(OrderedDict(preferences))
+        return dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
 
 
     def anti_plurality_voting(self, preference_matrix):
@@ -53,18 +53,18 @@ class VotingSchemesRunner:
             for index, element in enumerate(unique):
                 preferences[element] += counts[index]
 
-        return dict(OrderedDict(preferences))
+        return dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
 
 
     def borda_voting(self, preference_matrix):
         preferences = {k:0 for k in preference_matrix[:, 0]}
         n_candidates = preference_matrix.shape[0]
         for i in range(n_candidates):
-            borda_factor = len(n_candidates) - i - 1
+            borda_factor = n_candidates - i - 1
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 preferences[element] += counts[index] * borda_factor
 
-        return dict(OrderedDict(preferences))
+        return dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
 
         
