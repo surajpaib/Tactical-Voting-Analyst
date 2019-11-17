@@ -1,21 +1,19 @@
 import numpy as np
-import logging 
+import logging
 
 
 class PreferenceCreator:
     def __init__(self):
-        pass
+        self.number_of_voters = 0
+        self.number_of_candidates = 0
+        self.list_of_candidates = []
+        self.preference_matrix = np.array([])
+        self.selected_scheme = None
 
     def get_preferences(self):
         self.get_number_of_voters()
         self.get_number_of_candidates()
         self.get_voting_schemes()
-        self.preference_matrix = np.zeros((self.number_of_candidates, self.number_of_voters))
-        # TODO Generalize to unlimited candidates
-        self.list_of_candidates = [chr(65 + offset) for offset in range(self.number_of_candidates)]
-    
-        print("\n Preference Matrix: \n{}".format(self.preference_matrix))
-        print("\n Generated List of Candidates: {}".format(self.list_of_candidates))
         self.get_voter_candidates()
         return self.preference_matrix, self.selected_scheme
         
@@ -62,6 +60,7 @@ class PreferenceCreator:
                 break
             except:
                 logging.error("Input value for number of voters is incorrect. Please enter an integer value")
+                raise ValueError
 
     def get_number_of_candidates(self):
         """ask user for number of candidates (up to 26)"""
@@ -74,4 +73,11 @@ class PreferenceCreator:
                 break
             except:
                 logging.error("Input value for number of candidates is incorrect. Please enter an integer value.")
+                raise ValueError
+        
+        # TODO Generalize to unlimited candidates
+        self.list_of_candidates = [chr(65 + offset) for offset in range(self.number_of_candidates)]
+        self.preference_matrix = np.zeros((self.number_of_candidates, self.number_of_voters))
+        print("\n Preference Matrix: \n{}".format(self.preference_matrix))  
+        print("\n Generated List of Candidates: {}".format(self.list_of_candidates))
 
