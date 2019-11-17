@@ -18,7 +18,7 @@ class VotingSchemesRunner:
             return self.borda_voting(preference_matrix)    
 
 
-    def calculate_voter_happiness():
+    def calculate_voter_happiness(self):
         pass
     
     def calculate_overall_happiness(self, vector_happiness):
