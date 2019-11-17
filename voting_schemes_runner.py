@@ -61,8 +61,8 @@ class VotingSchemesRunner:
         preferences = {k:0 for k in np.unique(preference_matrix)}
 
         # TODO: check if the one with most votes really wins
-        n_candidates = preference_matrix.shape[0]
-        for i in range(n_candidates):
+        n_preferences = preference_matrix.shape[0]
+        for i in range(n_preferences-1):
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 preferences[element] += counts[index]
@@ -72,9 +72,9 @@ class VotingSchemesRunner:
 
     def borda_voting(self, preference_matrix):
         preferences = {k:0 for k in np.unique(preference_matrix)}
-        n_candidates = preference_matrix.shape[0]
-        for i in range(n_candidates):
-            borda_factor = n_candidates - i - 1
+        n_preferences = preference_matrix.shape[0]
+        for i in range(n_preferences):
+            borda_factor = n_preferences - i - 1
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 preferences[element] += counts[index] * borda_factor
