@@ -2,7 +2,7 @@ import numpy as np
 
 
 class VotingSchemesRunner:
-    def __init__(self, preference_matrix, voting_scheme):
+    def __init__(self, preference_matrix: list, voting_scheme: int):
         self.preference_matrix = np.array(preference_matrix, dtype=np.uint8)
         self.voting_scheme = voting_scheme
 
@@ -26,6 +26,7 @@ class VotingSchemesRunner:
         print("\nNon-Strategic Voting Outcome is: {}".format(chr(self.voting_outcome)))
 
     def voting_for_two(self, preference_matrix):
+        """Check for most frequently mentioned preferences in first two columns"""
         preferences = {}
         for i in range(2):
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
@@ -41,8 +42,10 @@ class VotingSchemesRunner:
 
 
     def anti_plurality_voting(self, preference_matrix):
+        # TODO: check if the one with most votes really wins
         preferences = {}
-        for i in range(len(preference_matrix[:, 0])):
+        n_candidates = preference_matrix.shape[0]
+        for i in range(n_candidates):
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 if element not in preferences:
@@ -57,8 +60,9 @@ class VotingSchemesRunner:
 
     def borda_voting(self, preference_matrix):
         preferences = {}
-        for i in range(len(preference_matrix[:, 0])):
-            borda_factor = len(preference_matrix[:, 0]) - i - 1
+        n_candidates = preference_matrix.shape[0]
+        for i in range(n_candidates):
+            borda_factor = len(n_candidates) - i - 1
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 if element not in preferences:
