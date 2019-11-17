@@ -18,11 +18,6 @@ class VotingSchemesRunner:
             return self.borda_voting(preference_matrix)    
 
 
-<<<<<<< HEAD
-    def calculate_voter_happiness(self):
-        pass
-    
-=======
     def calculate_voters_happiness(self, preference_matrix, voting_outcome):
         vector_happiness = []
         for voter_preference_list in preference_matrix.T:
@@ -36,7 +31,6 @@ class VotingSchemesRunner:
             vector_happiness.append(voter_happiness)
         return np.array(vector_happiness)
         
->>>>>>> refs/remotes/origin/master
     def calculate_overall_happiness(self, vector_happiness):
         self.overall_happiness = np.sum(vector_happiness)
         print("\nOverall Happiness of population is: {}".format(self.overall_happiness))
