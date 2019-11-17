@@ -15,10 +15,9 @@ class VotingSchemesRunner:
         elif voting_scheme == 2:
             return self.anti_plurality_voting(preference_matrix)
         elif voting_scheme == 3:
-            return self.borda_voting(preference_matrix)    
+            return self.borda_voting(preference_matrix)
 
-
-    def calculate_voters_happiness(self, preference_matrix, voting_outcome):
+    def calculate_voters_happiness(self, preference_matrix, voting_outcome: OrderedDict):
         vector_happiness = []
         for voter_preference_list in preference_matrix.T:
             d = 0

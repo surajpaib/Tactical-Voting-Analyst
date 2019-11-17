@@ -1,5 +1,6 @@
 from preference_creator import PreferenceCreator
 from voting_schemes_runner import VotingSchemesRunner
+from collections import OrderedDict
 import mock
 import unittest
 import numpy as np
@@ -35,9 +36,20 @@ class TestInputFunctions(unittest.TestCase):
         with mock.patch("builtins.input", return_value=number_of_candidates):
             pc.get_number_of_candidates()
             self.assertEqual(pc.number_of_candidates, number_of_candidates)
+            self.assertEqual(pc.list_of_candidates, ["A", "B", "C", "D"])
+            self.assertTrue((pc.preference_matrix == np.array([]).reshape(4, 0)).all())
         with mock.patch("builtins.input", return_value="a"):
             with self.assertRaises(ValueError):
                 pc.get_number_of_candidates()
+
+    def test_get_voting_schemes(sef):
+        pd = PreferenceCreator()
+        with mock.patch("builtins.input", return_value=1):
+            pc.get_voting_schemes()
+            self.assertEqual(pc.selected_scheme, 1)
+        with mock.patch("builtins.input", return_value="a"):
+            with self.assertRaises(ValueError):
+                pc.test_get_voting_schemes()
     
     def test_get_voter_cadidates(self):
         # deterministic
@@ -83,6 +95,13 @@ class TestVotingSchemes(unittest.TestCase):
         vsr = VotingSchemesRunner()
         desired_outcome = {65: 4, 66: 4, 67: 4, 68: 0}
         self.assertEqual(vsr.anti_plurality_voting(pc.preference_matrix), desired_outcome)
+
+    def test_calculate_voter_happiness(self):
+        preference_matrix = np.array([65, 66, 67, 68]).reshape(-1, 1)
+        voting_outcome = {66: 4, 65: 0, 67: 0, 68: 0}
+        vsr = VotingSchemesRunner()
+        desired_outcome = 4*(3-4) + 3*(4-3) + 2*(2-2) + 1*(1-1)
+        self.assertEqual(vsr.calculate_voters_happiness(preference_matrix, voting_outcome), desired_outcome)
 
 if __name__ == "__main__":
     unittest.main()
