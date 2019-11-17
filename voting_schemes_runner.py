@@ -18,9 +18,25 @@ class VotingSchemesRunner:
             return self.borda_voting(preference_matrix)    
 
 
+<<<<<<< HEAD
     def calculate_voter_happiness(self):
         pass
     
+=======
+    def calculate_voters_happiness(self, preference_matrix, voting_outcome):
+        vector_happiness = []
+        for voter_preference_list in preference_matrix.T:
+            d = 0
+            for j in range(len(voter_preference_list)):
+                candidate = voter_preference_list[j]
+                k = list(voting_outcome).index(candidate)  # position of the candidate in the voting outcome 
+                weight = j+1   # j starts at 0 but we want weight to start at 1
+                d += weight * (k-j)
+            voter_happiness = 1 / (1 + abs(d))
+            vector_happiness.append(voter_happiness)
+        return np.array(vector_happiness)
+        
+>>>>>>> refs/remotes/origin/master
     def calculate_overall_happiness(self, vector_happiness):
         self.overall_happiness = np.sum(vector_happiness)
         print("\nOverall Happiness of population is: {}".format(self.overall_happiness))
