@@ -43,7 +43,7 @@ class TestInputFunctions(unittest.TestCase):
                 pc.get_number_of_candidates()
 
     def test_get_voting_schemes(sef):
-        pd = PreferenceCreator()
+        pc = PreferenceCreator()
         with mock.patch("builtins.input", return_value=1):
             pc.get_voting_schemes()
             self.assertEqual(pc.selected_scheme, 1)
@@ -101,7 +101,10 @@ class TestVotingSchemes(unittest.TestCase):
         voting_outcome = {66: 4, 65: 0, 67: 0, 68: 0}
         vsr = VotingSchemesRunner()
         desired_outcome = 4*(3-4) + 3*(4-3) + 2*(2-2) + 1*(1-1)
-        self.assertEqual(vsr.calculate_voters_happiness(preference_matrix, voting_outcome), desired_outcome)
+        self.assertEqual(vsr.calculate_voters_happiness(preference_matrix, voting_outcome), np.array([desired_outcome]))
+
+    def test_calculate_overall_happiness(self):
+        pass
 
 if __name__ == "__main__":
     unittest.main()
