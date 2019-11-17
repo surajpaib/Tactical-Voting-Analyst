@@ -26,7 +26,7 @@ class VotingSchemesRunner:
         print("\nOverall Happiness of population is: {}".format(self.overall_happiness))
 
     def plurality_voting(self, preference_matrix):
-        preferences = {k: 0 for k in preference_matrix[:, 0]}
+        preferences = {k:0 for k in np.unique(preference_matrix)}
         print(preferences)
         unique, counts = np.unique(preference_matrix[0, :], return_counts=True)
         for index, element in enumerate(unique):
@@ -37,7 +37,7 @@ class VotingSchemesRunner:
     def voting_for_two(self, preference_matrix):
         """Check for most frequently mentioned preferences in first two columns"""
 
-        preferences = {k:0 for k in preference_matrix[:, 0]}
+        preferences = {k:0 for k in np.unique(preference_matrix)}
 
         for i in range(2):
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
@@ -48,7 +48,7 @@ class VotingSchemesRunner:
 
 
     def anti_plurality_voting(self, preference_matrix):
-        preferences = {k:0 for k in preference_matrix[:, 0]}
+        preferences = {k:0 for k in np.unique(preference_matrix)}
 
         # TODO: check if the one with most votes really wins
         n_candidates = preference_matrix.shape[0]
@@ -61,7 +61,7 @@ class VotingSchemesRunner:
 
 
     def borda_voting(self, preference_matrix):
-        preferences = {k:0 for k in preference_matrix[:, 0]}
+        preferences = {k:0 for k in np.unique(preference_matrix)}
         n_candidates = preference_matrix.shape[0]
         for i in range(n_candidates):
             borda_factor = n_candidates - i - 1
