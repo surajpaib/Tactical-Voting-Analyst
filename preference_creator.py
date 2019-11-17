@@ -31,13 +31,13 @@ class PreferenceCreator:
                 else:
                     break
             except:
-                print("\nInvalid Scheme selection. Select a value between 1-4")
+                print("\nInvalid scheme selected. Please select a value between 1-4")
 
     def get_voter_candidates(self):
         """Get user input for voter preferences"""
         for voter_number in range(self.number_of_voters):
-            print("\n Entering Preferences for Voter {} ".format(voter_number+ 1))
-            print("\n Possible options are: {}".format(self.list_of_candidates))
+            print("\n Enter preferences for voter {}:".format(voter_number+ 1))
+            print("Possible options are: {}".format(self.list_of_candidates))
             voter_choices = []
             for candidate_number in range(len(self.list_of_candidates)):
                 while True:
@@ -61,17 +61,17 @@ class PreferenceCreator:
                 self.number_of_voters = int(input("Enter the number of Voters: "))
                 break
             except:
-                logging.error("Input value for number of voters is incorrect. Please Enter an Integer value")
+                logging.error("Input value for number of voters is incorrect. Please enter an integer value")
 
     def get_number_of_candidates(self):
         """ask user for number of candidates (up to 26)"""
         while True:
             try: 
-                self.number_of_candidates = int(input("\nEnter the number of Candidates: "))
+                self.number_of_candidates = int(input("\nEnter the number of candidates: "))
                 if self.number_of_candidates > 26:
                     logging.error("Number of Candidates cannot be a value above 26")
                     continue
                 break
             except:
-                logging.error("Input value for number of Candidates is incorrect. Please Enter an Integer value")
+                logging.error("Input value for number of candidates is incorrect. Please enter an integer value.")
 
