@@ -21,11 +21,15 @@ class VotingSchemesRunner:
         vector_happiness = []
         for voter_preference_list in preference_matrix.T:
             d = 0
-            for j in range(len(voter_preference_list)):
-                candidate = voter_preference_list[j]
-                k = list(voting_outcome).index(candidate)  # position of the candidate in the voting outcome 
-                weight = j+1   # j starts at 0 but we want weight to start at 1
-                d += weight * (k-j)
+            pref_len = len(voter_preference_list)
+            for i in range(pref_len):
+                j =  pref_len - i
+                candidate = voter_preference_list[i]
+                # k - position of the candidate in the voting outcome
+                # voting outcome reversed so that the order is from least preferred to the most preferred
+                k = pref_len - list(voting_outcome).index(candidate)  
+                #weight = j+1   # j starts at 0 but we want weight to start at 1
+                d += j*(k-j)
             voter_happiness = 1 / (1 + abs(d))
             vector_happiness.append(voter_happiness)
         return np.array(vector_happiness)

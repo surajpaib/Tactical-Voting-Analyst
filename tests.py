@@ -42,14 +42,14 @@ class TestInputFunctions(unittest.TestCase):
             with self.assertRaises(ValueError):
                 pc.get_number_of_candidates()
 
-    def test_get_voting_schemes(sef):
+    def test_get_voting_schemes(self):
         pc = PreferenceCreator()
         with mock.patch("builtins.input", return_value=1):
             pc.get_voting_schemes()
-            self.assertEqual(pc.selected_scheme, 1)
+            self.assertEqual(pc.selected_scheme, 0)
         with mock.patch("builtins.input", return_value="a"):
             with self.assertRaises(ValueError):
-                pc.test_get_voting_schemes()
+                pc.get_voting_schemes()
     
     def test_get_voter_cadidates(self):
         # deterministic
@@ -100,7 +100,28 @@ class TestVotingSchemes(unittest.TestCase):
         preference_matrix = np.array([65, 66, 67, 68]).reshape(-1, 1)
         voting_outcome = {66: 4, 65: 0, 67: 0, 68: 0}
         vsr = VotingSchemesRunner()
-        desired_outcome = 4*(3-4) + 3*(4-3) + 2*(2-2) + 1*(1-1)
+        desired_outcome = 1 / (1 + abs(4*(3-4) + 3*(4-3) + 2*(2-2) + 1*(1-1)))
+        self.assertEqual(vsr.calculate_voters_happiness(preference_matrix, voting_outcome), np.array([desired_outcome]))
+
+    def test_calculate_voter_happiness2(self):
+        preference_matrix = np.array([65, 66, 67, 68]).reshape(-1, 1)
+        voting_outcome = {65: 4, 66: 0, 67: 0, 68: 0}
+        vsr = VotingSchemesRunner()
+        desired_outcome = 1 / (1 + abs(4*(4-4) + 3*(3-3) + 2*(2-2) + 1*(1-1)))
+        self.assertEqual(vsr.calculate_voters_happiness(preference_matrix, voting_outcome), np.array([desired_outcome]))
+    
+    def test_calculate_voter_happiness3(self):
+        preference_matrix = np.array([65, 66, 67, 68]).reshape(-1, 1)
+        voting_outcome = {68: 4, 66: 0, 67: 0, 65: 0}
+        vsr = VotingSchemesRunner()
+        desired_outcome = 1 / (1 + abs(4*(1-4) + 3*(3-3) + 2*(2-2) + 1*(4-1)))
+        self.assertEqual(vsr.calculate_voters_happiness(preference_matrix, voting_outcome), np.array([desired_outcome]))
+
+    def test_calculate_voter_happiness4(self):
+        preference_matrix = np.array([65, 66, 67, 68]).reshape(-1, 1)
+        voting_outcome = {68: 4, 67: 0, 66: 0, 65: 0}
+        vsr = VotingSchemesRunner()
+        desired_outcome = 1 / (1 + abs(4*(1-4) + 3*(2-3) + 2*(3-2) + 1*(4-1)))
         self.assertEqual(vsr.calculate_voters_happiness(preference_matrix, voting_outcome), np.array([desired_outcome]))
 
     def test_calculate_overall_happiness(self):
