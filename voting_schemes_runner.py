@@ -15,10 +15,9 @@ class VotingSchemesRunner:
         elif voting_scheme == 2:
             return self.anti_plurality_voting(preference_matrix)
         elif voting_scheme == 3:
-            return self.borda_voting(preference_matrix)    
+            return self.borda_voting(preference_matrix)
 
-
-    def calculate_voters_happiness(self, preference_matrix, voting_outcome):
+    def calculate_voters_happiness(self, preference_matrix, voting_outcome: OrderedDict):
         vector_happiness = []
         for voter_preference_list in preference_matrix.T:
             d = 0
@@ -33,10 +32,10 @@ class VotingSchemesRunner:
         
     def calculate_overall_happiness(self, vector_happiness):
         self.overall_happiness = np.sum(vector_happiness)
-        print("\nOverall Happiness of population is: {}".format(self.overall_happiness))
+        return self.overall_happiness
 
     def plurality_voting(self, preference_matrix):
-        preferences = {k: 0 for k in preference_matrix[:, 0]}
+        preferences = {k:0 for k in np.unique(preference_matrix)}
         print(preferences)
         unique, counts = np.unique(preference_matrix[0, :], return_counts=True)
         for index, element in enumerate(unique):
@@ -47,7 +46,7 @@ class VotingSchemesRunner:
     def voting_for_two(self, preference_matrix):
         """Check for most frequently mentioned preferences in first two columns"""
 
-        preferences = {k:0 for k in preference_matrix[:, 0]}
+        preferences = {k:0 for k in np.unique(preference_matrix)}
 
         for i in range(2):
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
@@ -58,11 +57,11 @@ class VotingSchemesRunner:
 
 
     def anti_plurality_voting(self, preference_matrix):
-        preferences = {k:0 for k in preference_matrix[:, 0]}
+        preferences = {k:0 for k in np.unique(preference_matrix)}
 
         # TODO: check if the one with most votes really wins
-        n_candidates = preference_matrix.shape[0]
-        for i in range(n_candidates):
+        n_preferences = preference_matrix.shape[0]
+        for i in range(n_preferences-1):
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 preferences[element] += counts[index]
@@ -71,10 +70,10 @@ class VotingSchemesRunner:
 
 
     def borda_voting(self, preference_matrix):
-        preferences = {k:0 for k in preference_matrix[:, 0]}
-        n_candidates = preference_matrix.shape[0]
-        for i in range(n_candidates):
-            borda_factor = n_candidates - i - 1
+        preferences = {k:0 for k in np.unique(preference_matrix)}
+        n_preferences = preference_matrix.shape[0]
+        for i in range(n_preferences):
+            borda_factor = n_preferences - i - 1
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 preferences[element] += counts[index] * borda_factor
