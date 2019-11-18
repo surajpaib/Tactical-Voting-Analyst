@@ -30,7 +30,7 @@ class PreferenceCreator:
                     break
             except:
                 print("\nInvalid scheme selected. Please select a value between 1-4")
-                raise ValueError
+                #raise ValueError
 
     def get_voter_candidates(self):
         """Get user input for voter preferences"""

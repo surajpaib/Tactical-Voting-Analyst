@@ -14,3 +14,20 @@ if __name__ == "__main__":
     if tactical_voter.bullet_voting():
         for candidate_options in tactical_voter.strategic_voting_options:
             print("Options for candidate: {}\n".format(candidate_options))
+            
+            
+    compromise_results = tactical_voter.compromising_strategy(preference_matrix, voting_results)
+    
+    for candidate in range(len(preference_matrix[0])):
+        print("\nCandidate {}:\n>Original Pref List: {}; Original Happiness Vector: {};".format(
+                candidate+1,
+                preference_matrix[:,candidate],
+                votingrunner.calculate_voters_happiness(preference_matrix, voting_results)))        
+        print("\n>Modified preference matrix for candidate {} using compromise/burrying:\n {}".format(candidate+1, compromise_results[candidate]))
+        if len(compromise_results[candidate])>0:
+            print("\n>>New happiness vector:\n>>{}".format(
+                    votingrunner.calculate_voters_happiness(
+                            compromise_results[candidate],
+                            votingrunner.run_voting_simulation(compromise_results[candidate],selected_scheme)
+                        )
+                    ))

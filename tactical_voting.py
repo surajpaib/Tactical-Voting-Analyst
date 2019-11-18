@@ -46,8 +46,8 @@ class TacticalVoting:
         return True
 
     def compromising_strategy(self, preference_matrix, voting_outcome):
-        self.vh1 = self.votingrunner.calculate_voters_happiness(preference_matrix, voting_outcome)
-        self.newpref = [[]] * len(preference_matrix[0])
+        self.happiness_vector = self.votingrunner.calculate_voters_happiness(preference_matrix, voting_outcome)
+        self.modified_preference_matrix = [[]] * len(preference_matrix[0])
 
         for i in range(len(preference_matrix[0])):
             for j in range(len(preference_matrix[:,0])):
@@ -57,8 +57,10 @@ class TacticalVoting:
                         tmp = self.pref2[j,i]
                         self.pref2[j,i] = self.pref2[k,i]
                         self.pref2[k,i] = tmp
-                        self.vh2 = self.votingrunner.calculate_voters_happiness(self.pref2, voting_outcome)
-                        #print("\nInit VH : {}, new VH: {}".format(self.vh1,self.vh2))
-                        if (self.vh1[i] < self.vh2[i]):
-                            self.newpref[i] = deepcopy(self.pref2)
+                        strategic_voting_results = self.votingrunner.run_voting_simulation(self.pref2, self.selected_scheme)
+                        self.new_happiness_vector = self.votingrunner.calculate_voters_happiness(self.pref2, strategic_voting_results)
+                        #print("\nInit VH : {}, new VH: {}".format(self.happiness_vector,self.new_happiness_vector))
+                        if (self.happiness_vector[i] < self.new_happiness_vector[i]):
+                            self.modified_preference_matrix[i] = deepcopy(self.pref2)
                         # if (calculate happiness>): pref2 = modified_preference_matrix
+        return self.modified_preference_matrix
