@@ -49,7 +49,7 @@ class PreferenceCreator:
             # assign ASCII character values to preferences
             numerical_voter_choices = np.array([int(ord(val)) for val in voter_choices])
             self.preference_matrix[:, voter_number] = numerical_voter_choices
-        print("\n Preference Matrix: \n{}".format(self.preference_matrix))
+        print("\n Preference Matrix: \n{}\n".format(self.preference_matrix))
             
                 
 
@@ -79,6 +79,5 @@ class PreferenceCreator:
         # TODO Generalize to unlimited candidates
         self.list_of_candidates = [chr(65 + offset) for offset in range(self.number_of_candidates)]
         self.preference_matrix = np.zeros((self.number_of_candidates, self.number_of_voters))
-        print("\n Preference Matrix: \n{}".format(self.preference_matrix))  
         print("\n Generated List of Candidates: {}".format(self.list_of_candidates))
 
