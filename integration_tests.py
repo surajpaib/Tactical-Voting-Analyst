@@ -1,22 +1,35 @@
 from preference_creator import PreferenceCreator as PC
 from voting_schemes_runner import VotingSchemesRunner as VSR
 from tactical_voting import TacticalVoting as TV
+from itertools import permutations
 import numpy as np
 
-def integration_10x10(voting_scheme):
+def integration_MxN(n_candidates, n_voters, voting_scheme):
     """
     @param voting_scheme: one of the four voting schemes
     """
-    # TODO: Write integration test for 10 voters & 10 candidates
-    pass
+    candidates_num = range(65, 65+n_candidates)
+    candidates = [str(chr(i)) for i in candidates_num]
+    pref_list = list(permutations(candidates_num))
+    pref_mat = np.zeros((n_candidates, n_voters))
+    for i in range(n_voters):
+        rand = np.random.randint(0, len(pref_list))
+        pref_mat[:, i] = np.array(pref_list[rand])
+    params = {"num_voters": n_voters,
+              "num_candidates": n_candidates,
+              "candidate_list": candidates,
+              "pref_mat": pref_mat,
+              "scheme": voting_scheme}  # scheme is not 2 as in manual selection
+    pc = PC(**params)
+    vsr = VSR()
+    vsr.voting_simulation(pc.pref_mat, pc.scheme)
+    tv = TV(pref_mat=pc.pref_mat,
+            voting_outcome=vsr.results,
+            scheme=pc.scheme)
+    return pc, vsr, tv
 
 def integration_voting_for_two():
-    """
-    Integration test for voting_for_two
-    @param pc: PC
-    @param vsr: VotingSchemeRunner
-    @param tv: TacticalVoter
-    """
+    """Integration test for voting_for_two"""
     params = {"num_voters": 3,
               "num_candidates": 2,
               "candidate_list": ["A", "B"],
@@ -28,5 +41,5 @@ def integration_voting_for_two():
     tv = TV(pref_mat=pc.pref_mat,
             voting_outcome=vsr.results,
             scheme=pc.scheme)
-    """Expected outcome: Bullet voting possible for candidate 2"""
+    """Expected outcome: Bullet voting as well as compromising possible for all"""
     return pc, vsr, tv

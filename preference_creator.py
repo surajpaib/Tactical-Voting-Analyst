@@ -20,7 +20,7 @@ class PreferenceCreator:
         voting_schemes = ['1: Plurality Voting', '2: Voting for two', '3: Anti-Plurality Voting', '4: Borda Voting']
         while True:
             try: 
-                self.scheme = int(input("Select the Voting Scheme using the indexes \n{} :".format(voting_schemes))) - 1
+                self.scheme = int(input("Select the Voting Scheme using the indexes \n{}:".format(voting_schemes))) - 1
                 if self.scheme > 3 or self.scheme < 0:
                     print("\n Select a value between 1 and 4")
                     continue
