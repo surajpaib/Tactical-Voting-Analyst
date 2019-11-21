@@ -34,7 +34,7 @@ class VotingSchemesRunner:
         
     def plurality_voting(self, preference_matrix):
         preferences = {k:0 for k in np.unique(preference_matrix)}
-        unique, counts = np.unique(preference_matrix[0, :], return_counts=True)
+        unique, counts = np.unique(preference_matrix[0], return_counts=True)
         for index, element in enumerate(unique):
             preferences[element] += counts[index]
         self.results = dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
