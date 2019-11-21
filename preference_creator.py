@@ -3,7 +3,7 @@ import logging
 
 
 class PreferenceCreator:
-    def __init__(self, num_voters=0, num_candidates=0, candidate_list=[], pref_mat=np.array([]), scheme=None):
+    def __init__(self, num_voters=0, num_candidates=0, candidate_list=[], pref_mat=np.array([], dtype=np.uint8), scheme=None):
         self.num_voters = num_voters
         self.num_candidates = num_candidates
         self.candidate_list = candidate_list
@@ -45,10 +45,8 @@ class PreferenceCreator:
                     else:
                         print("The preference selected is invalid or already chosen. Please choose wisely.")
             # assign ASCII character values to preferences
-            numerical_voter_choices = np.array([int(ord(val)) for val in voter_choices])
-            self.pref_mat[:, voter_number] = numerical_voter_choices
-        print("\n Preference Matrix: \n{}\n".format(self.pref_mat))
-            
+            numerical_voter_choices = np.array([ord(val) for val in voter_choices])
+            self.pref_mat[:, voter_number] = numerical_voter_choices            
                 
 
     def get_num_voters(self):
@@ -76,6 +74,6 @@ class PreferenceCreator:
         
         # TODO Generalize to unlimited candidates
         self.candidate_list = [chr(65 + offset) for offset in range(self.num_candidates)]
-        self.pref_mat = np.zeros((self.num_candidates, self.num_voters))
+        self.pref_mat = np.zeros((self.num_candidates, self.num_voters), dtype=np.uint8)
         print("\n Generated List of Candidates: {}".format(self.candidate_list))
 

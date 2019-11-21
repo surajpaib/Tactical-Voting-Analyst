@@ -11,7 +11,7 @@ def integration_MxN(n_candidates, n_voters, voting_scheme):
     candidates_num = range(65, 65+n_candidates)
     candidates = [str(chr(i)) for i in candidates_num]
     pref_list = list(permutations(candidates_num))
-    pref_mat = np.zeros((n_candidates, n_voters))
+    pref_mat = np.zeros((n_candidates, n_voters), dtype=np.uint8)
     for i in range(n_voters):
         rand = np.random.randint(0, len(pref_list))
         pref_mat[:, i] = np.array(pref_list[rand])

@@ -37,7 +37,7 @@ if __name__ == "__main__":
     else:
         print("Invalid Input")
         exit()
-
+    print(pc.pref_mat)
     str_pref_mat = [[chr(j) for j in i] for i in pc.pref_mat]
     print("\nPreference matrix:")
     for i in str_pref_mat:
