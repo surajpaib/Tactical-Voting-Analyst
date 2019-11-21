@@ -40,7 +40,7 @@ class TacticalVoting:
                         "Preference list": [chr(i).replace('\x00','') for i in bullet_pref_mat[:, voter]],
                         "Voting result": str_tactical_results,
                         "Happiness": sum(tactical_happiness),
-                        "Description": "Happiness of voter {} increased by : {} due to voting only for {}".format(voter, happiness_gain, str(candidate))
+                        "Description": "Happiness of voter {} increased by : {} due to voting only for {}".format(voter, happiness_gain, chr(candidate))
                     })
 
     def compromising_strategy(self):
