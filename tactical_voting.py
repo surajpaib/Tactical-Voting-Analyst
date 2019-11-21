@@ -4,6 +4,7 @@ from copy import deepcopy
 from collections import OrderedDict
 import numpy as np
 
+
 class TacticalVoting:
     def __init__(self, pref_mat, voting_outcome, scheme):
         self.pref_mat = pref_mat
@@ -67,7 +68,7 @@ class TacticalVoting:
                             voter, happiness_gain)                        
                     })
 
-        ## Corrected, but still not what we want
+        # # Corrected, but still not what we want
         # for voter in range(len(self.n_voters)):
         #     for c1 in range(len(self.n_candidates)):  # candidate 1
         #         for c2 in range(len(self.n_candidates)):  # candidate 2
@@ -90,21 +91,3 @@ class TacticalVoting:
         #                     "Happiness of voter {} increased by : {} due to swapping {} with {}".format(
         #                         voter, happiness_gain, c1, c2)                        
         #                 ))
-
-        ## WRONG
-        # modified_pref_mat = [[]] * len(self.n_candidates)
-        # for i in range(len(self.n_candidates)):
-        #     for j in range(self.n_voters):
-        #         for k in range(self.n_voters):
-        #             if k != j:
-        #                 pref2 = np.copy(self.pref_mat)
-        #                 tmp = pref2[j,i]
-        #                 pref2[j,i] = pref2[k,i]
-        #                 pref2[k,i] = tmp
-        #                 tactical_results = self.vsr.voting_simulation(pref2, self.scheme)
-        #                 new_happiness = self.vsr.get_happiness(pref2, tactical_results)
-        #                 happiness_gain = new_happiness[i] - happiness[i]
-        #                 if (happiness[i] < new_happiness[i]):
-        #                     modified_pref_mat[i] = np.copy(pref2)
-        #                 # if (calculate happiness>): pref2 = modified_pref_mat
-        # return modified_pref_mat

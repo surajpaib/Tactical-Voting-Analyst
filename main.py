@@ -4,7 +4,6 @@ from tactical_voting import TacticalVoting
 import integration_tests as IT
 
 
-# TODO: Replace values 65, 66, ... with alphabetical values in output!
 if __name__ == "__main__":
     modes = {1: "Manual Input",
              2: "Integration test: 2 candidates, 3 voters, voting for two",
@@ -62,19 +61,7 @@ if __name__ == "__main__":
                 print("\t{}\t: {}".format(k, v))
             print()
 
-    strat_voting_risk = sum(len(i) for i in tv.strategic_voting_options) / pc.num_voters
+    # TODO: Not sure which way is right
+    # strat_voting_risk = sum(len(i) for i in tv.strategic_voting_options) / pc.num_voters
+    strat_voting_risk = sum([1 if len(i)>0 else 0 for i in tv.strategic_voting_options]) /pc.num_voters
     print("\nOverall risk of strategic voting: {}".format(strat_voting_risk))
-
-    # for candidate in range(len(pc.pref_mat[0])):
-    #     print("\nCandidate {}:\n>Original Pref List: {}; Original Happiness Vector: {};".format(
-    #             candidate+1,
-    #             pc.pref_mat[:,candidate],
-    #             vsr.get_happiness(pc.pref_mat, vsr.results)))        
-    #     print("\n>Modified preference matrix for candidate {} using compromise/burrying:\n {}".format(candidate+1, compromise_results[candidate]))
-    #     if len(compromise_results[candidate])>0:
-    #         print("\n>>New happiness vector:\n>>{}".format(
-    #                 vsr.get_happiness(
-    #                         compromise_results[candidate],
-    #                         vsr.voting_simulation(compromise_results[candidate],pc.scheme)
-    #                     )
-    #                 ))
