@@ -21,17 +21,18 @@ if __name__ == "__main__":
     # Non-strategic voting
     overall_happiness = sum(vsr.get_happiness(pc.pref_mat, vsr.results))
     print("\nNon-strategic voting outcome: {}".format(vsr.results))
-    print("Overall voter happiness level: {}\n".format(overall_happiness))
+    print("Overall voter happiness level: {}".format(overall_happiness))
 
     # Bullet voting
-    if tv.bullet_voting():
-        for i, option in enumerate(tv.strategic_voting_options):
-            print("Options for voter {}: {}".format(i, option))
+    tv.bullet_voting()       
 
-    # TODO: testing (manual and integration)
-    # 
-    # # Compromising / Burying            
-    # compromise_results = tv.compromising_strategy(pc.pref_mat, vsr.results)
+    # Compromising / Burying            
+    tv.compromising_strategy()
+
+    for i, options in enumerate(tv.strategic_voting_options):
+        print("\nOptions for voter {}:".format(i))
+        for j in options:
+            print(j)
     
     # for candidate in range(len(pc.pref_mat[0])):
     #     print("\nCandidate {}:\n>Original Pref List: {}; Original Happiness Vector: {};".format(

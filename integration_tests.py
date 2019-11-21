@@ -3,6 +3,13 @@ from voting_schemes_runner import VotingSchemesRunner as VSR
 from tactical_voting import TacticalVoting as TV
 import numpy as np
 
+def integration_10x10(voting_scheme):
+    """
+    @param voting_scheme: one of the four voting schemes
+    """
+    # TODO: Write integration test for 10 voters & 10 candidates
+    pass
+
 def integration_voting_for_two():
     """
     Integration test for voting_for_two

@@ -21,33 +21,33 @@ def simple_test_scheme():
 
 class TestInputFunctions(unittest.TestCase):
     """Generate some sample voting schemes (deterministically and random)"""
-    def test_get_number_of_voters_succ(self):
+    def test_get_num_voters_succ(self):
         pc = PC()
         number_of_voters = 2
         with mock.patch("builtins.input", return_value=str(number_of_voters)):
-            pc.get_number_of_voters()    
+            pc.get_num_voters()    
             self.assertEqual(pc.number_of_voters, number_of_voters)
         with mock.patch("builtins.input", return_value="a"):
             with self.assertRaises(ValueError):
-                pc.get_number_of_voters()      
+                pc.get_num_voters()      
 
-    def test_get_number_of_candidates(self):
+    def test_get_num_candidates(self):
         pc = PC()
         number_of_candidates = 4
         with mock.patch("builtins.input", return_value=number_of_candidates):
-            pc.get_number_of_candidates()
+            pc.get_num_candidates()
             self.assertEqual(pc.number_of_candidates, number_of_candidates)
             self.assertEqual(pc.list_of_candidates, ["A", "B", "C", "D"])
             self.assertTrue((pc.preference_matrix == np.array([]).reshape(4, 0)).all())
         with mock.patch("builtins.input", return_value="a"):
             with self.assertRaises(ValueError):
-                pc.get_number_of_candidates()
+                pc.get_num_candidates()
 
     def test_get_voting_schemes(self):
         pc = PC()
         with mock.patch("builtins.input", return_value=1):
             pc.get_voting_schemes()
-            self.assertEqual(pc.selected_scheme, 0)
+            self.assertEqual(pc.scheme, 0)
     
     def test_get_voter_cadidates(self):
         pc = PC()
