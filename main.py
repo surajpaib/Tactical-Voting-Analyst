@@ -17,6 +17,7 @@ if __name__ == "__main__":
         pc, vsr, tv = IT.integration_voting_for_two()
     else:
         print("Invalid Input")
+        exit()
 
     # Non-strategic voting
     overall_happiness = sum(vsr.get_happiness(pc.pref_mat, vsr.results))
@@ -31,9 +32,13 @@ if __name__ == "__main__":
 
     for i, options in enumerate(tv.strategic_voting_options):
         print("\nOptions for voter {}:".format(i))
-        for j in options:
-            print(j)
-    
+        for option in options:
+            for k, v in option.items():
+                print("\t{}\t: {}".format(k, v))
+
+    strat_voting_risk = sum(len(i) for i in tv.strategic_voting_options) / pc.num_voters
+    print("\nOverall risk of strategic voting: {}".format(strat_voting_risk))
+
     # for candidate in range(len(pc.pref_mat[0])):
     #     print("\nCandidate {}:\n>Original Pref List: {}; Original Happiness Vector: {};".format(
     #             candidate+1,

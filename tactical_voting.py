@@ -15,9 +15,9 @@ class TacticalVoting:
     def bullet_voting(self):
         """Calculate whether voting for just one of the alternatives can result in greater happiness"""
 
-        if self.scheme == 0:
-            print("Bullet voting cannot be applied to plurality voting.")
-            exit()  
+        # bullet voting can be applied, but it will not achieve anything
+        # if self.scheme == 0:
+            # print("Bullet voting cannot be applied to plurality voting.")
 
         happiness = self.vsr.get_happiness(self.pref_mat, self.voting_outcome)
         for voter in range(self.n_voters):
@@ -32,12 +32,12 @@ class TacticalVoting:
                 tactical_happiness = self.vsr.get_happiness(self.pref_mat, tactical_results)
                 happiness_gain = tactical_happiness[voter] - happiness[voter]
                 if happiness_gain > 0:
-                    self.strategic_voting_options[voter].append((
-                        bullet_pref_mat,
-                        tactical_results,
-                        sum(tactical_happiness),
-                        "Happiness of voter {} increased by : {} due to voting only for {}".format(voter, happiness_gain, str(candidate))
-                    ))
+                    self.strategic_voting_options[voter].append({
+                        "Preference list": bullet_pref_mat[:, voter],
+                        "Voting result": tactical_results,
+                        "Happiness": sum(tactical_happiness),
+                        "Description": "Happiness of voter {} increased by : {} due to voting only for {}".format(voter, happiness_gain, str(candidate))
+                    })
 
     def compromising_strategy(self):
         """Tactical voting by ranking alternatives insincerely higher (lower)"""
@@ -54,13 +54,13 @@ class TacticalVoting:
                 tactical_happiness = self.vsr.get_happiness(comp_pref, tactical_results)
                 happiness_gain = tactical_happiness[voter] - happiness[voter]
                 if happiness_gain > 0:
-                    self.strategic_voting_options[voter].append((
-                        comp_pref,
-                        tactical_results,
-                        sum(tactical_happiness),
-                        "Happiness of voter {} increased by : {} due to reordering of preferences".format(
+                    self.strategic_voting_options[voter].append({
+                        "Preference list": comp_pref[:, voter],
+                        "Voting results": tactical_results,
+                        "Happiness:": sum(tactical_happiness),
+                        "Description": "Happiness of voter {} increased by : {} due to reordering of preferences".format(
                             voter, happiness_gain)                        
-                    ))
+                    })
 
         ## Corrected, but still not what we want
         # for voter in range(len(self.n_voters)):
