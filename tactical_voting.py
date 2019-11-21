@@ -38,7 +38,7 @@ class TacticalVoting:
                 if happiness_gain > 0:
                     self.strategic_voting_options[voter].append({
                         "Preference list": [chr(i).replace('\x00','') for i in bullet_pref_mat[:, voter]],
-                        "Voting result": tactical_results,
+                        "Voting result": str_tactical_results,
                         "Happiness": sum(tactical_happiness),
                         "Description": "Happiness of voter {} increased by : {} due to voting only for {}".format(voter, happiness_gain, chr(candidate))
                     })
@@ -76,20 +76,20 @@ class TacticalVoting:
                     if c1==c2:
                         continue
                     comp_pref = np.copy(self.pref_mat)                    
-                    tmp = comp_pref[c1, voter]
-                    comp_pref[c1, voter] = comp_pref[c2, voter]
-                    comp_pref[c2, voter] = tmp
+                    comp_pref[c1, voter], comp_pref[c2, voter] = comp_pref[c2, voter], comp_pref[c1, voter]
 
                     tactical_results = self.vsr.voting_simulation(comp_pref, self.scheme)
                     tactical_happiness = self.vsr.get_happiness(comp_pref, tactical_results)
                     happiness_gain = tactical_happiness[voter] - happiness[voter]
                     str_tactical_results = dict(zip([chr(i) for i in tactical_results.keys()], tactical_results.values()))
 
-                    if happiness_gain > 0:
-                        self.strategic_voting_options[voter].append({
+                    voting_option = {
                         "Preference list": [chr(i) for i in comp_pref[:, voter]],
                         "Voting results": str_tactical_results,
                         "Happiness:": sum(tactical_happiness),
                         "Description": "Happiness of voter {} increased by : {} due to reordering of preferences".format(
                             voter, happiness_gain)                        
-                    })
+                    }
+                    if happiness_gain > 0:
+                        if voting_option not in self.strategic_voting_options[voter]:
+                            self.strategic_voting_options[voter].append(voting_option)
