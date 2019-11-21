@@ -39,7 +39,10 @@ if __name__ == "__main__":
         print("Invalid Input")
         exit()
 
-    print("\nPreference matrix:\n{}".format(pc.pref_mat))    
+    str_pref_mat = [[chr(j) for j in i] for i in pc.pref_mat]
+    print("\nPreference matrix:")
+    for i in str_pref_mat:
+        print(i)
 
     # Non-strategic voting
     overall_happiness = sum(vsr.get_happiness(pc.pref_mat, vsr.results))

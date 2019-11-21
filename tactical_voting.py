@@ -1,5 +1,7 @@
 from voting_schemes_runner import VotingSchemesRunner as VSR
 from itertools import permutations
+from copy import deepcopy
+from collections import OrderedDict
 import numpy as np
 
 class TacticalVoting:
@@ -31,10 +33,11 @@ class TacticalVoting:
                 del tactical_results[0]  # Delete the '0' candidate
                 tactical_happiness = self.vsr.get_happiness(self.pref_mat, tactical_results)
                 happiness_gain = tactical_happiness[voter] - happiness[voter]
+                str_tactical_results = dict(zip([chr(i) for i in tactical_results.keys()], tactical_results.values()))
                 if happiness_gain > 0:
                     self.strategic_voting_options[voter].append({
-                        "Preference list": bullet_pref_mat[:, voter],
-                        "Voting result": tactical_results,
+                        "Preference list": [chr(i).replace('\x00','') for i in bullet_pref_mat[:, voter]],
+                        "Voting result": str_tactical_results,
                         "Happiness": sum(tactical_happiness),
                         "Description": "Happiness of voter {} increased by : {} due to voting only for {}".format(voter, happiness_gain, str(candidate))
                     })
@@ -53,10 +56,12 @@ class TacticalVoting:
                 tactical_results = self.vsr.voting_simulation(comp_pref, self.scheme)
                 tactical_happiness = self.vsr.get_happiness(comp_pref, tactical_results)
                 happiness_gain = tactical_happiness[voter] - happiness[voter]
+                str_tactical_results = dict(zip([chr(i) for i in tactical_results.keys()], tactical_results.values()))
                 if happiness_gain > 0:
+                    # TODO: change voting results to alphabetical!
                     self.strategic_voting_options[voter].append({
-                        "Preference list": comp_pref[:, voter],
-                        "Voting results": tactical_results,
+                        "Preference list": [chr(i) for i in comp_pref[:, voter]],
+                        "Voting results": str_tactical_results,
                         "Happiness:": sum(tactical_happiness),
                         "Description": "Happiness of voter {} increased by : {} due to reordering of preferences".format(
                             voter, happiness_gain)                        
