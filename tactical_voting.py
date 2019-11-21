@@ -9,7 +9,8 @@ class TacticalVoting:
         self.vsr = VSR()
         self.scheme = scheme
         self.n_candidates = pref_mat.shape[0]
-        self.strategic_voting_options = [[]] * self.n_candidates
+        self.n_voters = pref_mat.shape[1]
+        self.strategic_voting_options = [()] * self.n_voters
 
     def bullet_voting(self):
         """Calculate whether voting for just one of the alternatives can result in greater happiness"""
@@ -18,26 +19,26 @@ class TacticalVoting:
             print("Bullet voting cannot be applied to plurality voting.")
             return False        
 
-        for i in range(self.n_candidates):
-            happiness = self.vsr.get_happiness(self.pref_mat, self.voting_outcome)
-            candidate_happiness = happiness[i]       
-
+        # TODO: why for i in range(self.n_candidates) ?
+        happiness = self.vsr.get_happiness(self.pref_mat, self.voting_outcome)
+        for i in range(self.pref_mat.shape[1]):
             for candidate in np.unique(self.pref_mat):
-                # voter i attempts tactical voting for candicate
+                # voter i attempts tactical voting for each possible candicate
                 bullet_pref_mat = np.copy(self.pref_mat)
                 bullet_pref_mat[1:, i] = 0
                 bullet_pref_mat[0, i] = candidate
 
                 tactical_results = self.vsr.voting_simulation(bullet_pref_mat, self.scheme)
-                # del tactical_results[0]  # why do we do that??
+                del tactical_results[0]  # Delete the '0' candidate
                 happiness_tactical = self.vsr.get_happiness(self.pref_mat, tactical_results)
-
-                if happiness_tactical[i] > candidate_happiness:
-                    self.strategic_voting_options[i] = [
+                happiness_gain = happiness_tactical[i] - happiness[i]
+                if happiness_gain > 0:
+                    self.strategic_voting_options[i] = (
                         bullet_pref_mat,
                         tactical_results,
                         sum(happiness_tactical),
-                        "Happiness is increased for voter by : {}".format(happiness_tactical[i] - candidate_happiness)]
+                        "Happiness of voter {} increased by : {} due to voting only for {}".format(i, happiness_gain, candidate)
+                    )
         return True
 
     def compromising_strategy(self, pref_mat, voting_outcome):

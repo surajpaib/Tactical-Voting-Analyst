@@ -3,7 +3,7 @@ from collections import OrderedDict
 
 class VotingSchemesRunner:
     def __init__(self):
-        pass
+        self.results = None
 
     def voting_simulation(self, preference_matrix, voting_scheme):
         preference_matrix = np.array(preference_matrix, dtype=np.uint8)
@@ -37,8 +37,8 @@ class VotingSchemesRunner:
         unique, counts = np.unique(preference_matrix[0, :], return_counts=True)
         for index, element in enumerate(unique):
             preferences[element] += counts[index]
-        
-        return dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
+        self.results = dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
+        return self.results
 
     def voting_for_two(self, preference_matrix):
         """Check for most frequently mentioned preferences in first two columns"""
@@ -47,9 +47,8 @@ class VotingSchemesRunner:
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 preferences[element] += counts[index]
-
-        return dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
-
+        self.results = dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
+        return self.results
 
     def anti_plurality_voting(self, preference_matrix):
         preferences = {k:0 for k in np.unique(preference_matrix)}
@@ -60,9 +59,8 @@ class VotingSchemesRunner:
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 preferences[element] += counts[index]
-
-        return dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
-
+        self.results = dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
+        return self.results
 
     def borda_voting(self, preference_matrix):
         preferences = {k:0 for k in np.unique(preference_matrix)}
@@ -72,7 +70,7 @@ class VotingSchemesRunner:
             unique, counts = np.unique(preference_matrix[i, :], return_counts=True)
             for index, element in enumerate(unique):
                 preferences[element] += counts[index] * borda_factor
-
-        return dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
+        self.results = dict(sorted(preferences.items(), key= lambda x:x[1], reverse=True))
+        return self.results
 
         
