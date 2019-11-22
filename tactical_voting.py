@@ -79,7 +79,7 @@ class TacticalVoting:
                     comp_pref[c1, voter], comp_pref[c2, voter] = comp_pref[c2, voter], comp_pref[c1, voter]
 
                     tactical_results = self.vsr.voting_simulation(comp_pref, self.scheme)
-                    tactical_happiness = self.vsr.get_happiness(comp_pref, tactical_results)
+                    tactical_happiness = self.vsr.get_happiness(self.pref_mat, tactical_results)
                     happiness_gain = tactical_happiness[voter] - happiness[voter]
                     str_tactical_results = dict(zip([chr(i) for i in tactical_results.keys()], tactical_results.values()))
 
