@@ -6,28 +6,40 @@
 from preference_creator import PreferenceCreator as PC
 from voting_schemes_runner import VotingSchemesRunner as VSR
 from tactical_voting import TacticalVoting as TV
+from utils.plotly_colours import get_colours
 from itertools import permutations
 import integration_tests
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import plotly_express as px
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import time
 import os
+import matplotlib
+from matplotlib import cm
+
+TARGET_DIR = "experiments"
+FIG_DIR = os.path.join(TARGET_DIR, "figs")
+TARGET_FILE = "experiments/log.csv"
 
 def experiment(max_n_candidates, max_n_voters):
-    target_dir = "experiments"
-    target_file = "experiments/log.csv"
-    if not os.path.exists(target_dir):
-        os.mkdir(target_dir)
-    if not os.path.exists(target_file):
+    if not os.path.exists(TARGET_DIR):
+        os.mkdir(TARGET_DIR)
+    if not os.path.exists(TARGET_FILE):
         df = pd.DataFrame({
             "voting_scheme": [],
             "n_voters": [],
             "n_candidates": [],
             "strat_voting_risk": [],
-            "avg_happiness": []
+            "avg_happiness": [],
+            "run_time": []
         })
-        df.to_csv(target_file, index=False)
+        df.to_csv(TARGET_FILE, index=True)
     else:
-        df = pd.read_csv(target_file)
+        df = pd.read_csv(TARGET_FILE, index_col=0)
 
     voting_schemes = ['1: Plurality Voting', '2: Voting for two', '3: Anti-Plurality Voting', '4: Borda Voting']
     vs_list = []
@@ -35,37 +47,109 @@ def experiment(max_n_candidates, max_n_voters):
     c_list = []
     strat_voting_list = []
     happiness_list = []
+    run_time_list = []  # time needed to explore tactical voting options
     # TODO: fix error here!
     for vs in range(4):  # voting schemes:
-        for c in range(max_n_candidates):
-            for v in range(max_n_voters):
-                pc, vsr, tv = integration_tests.integration_MxN(c, v, vs)
+        print(f"Starting voting scheme {vs}")
+        for c in range(2, max_n_candidates+1):
+            for v in range(2, max_n_voters+1):
+                pc, vsr, tv = integration_tests.integration_MxN(c, v, vs, seed=42)
                 avg_happiness = sum(vsr.get_happiness(pc.pref_mat, vsr.results))/v
+
+                start_time = time.time()
                 tv.bullet_voting()       
                 tv.compromising_strategy()
+                end_time = time.time()
+
                 strat_voting_risk = sum([1 if len(i)>0 else 0 for i in tv.strategic_voting_options]) /pc.num_voters
                 
-                vs_list.append(voting_schemes[vs])
+                vs_list.append(voting_schemes[vs][3:])
                 v_list.append(v)
                 c_list.append(c)
                 strat_voting_list.append(strat_voting_risk)
                 happiness_list.append(avg_happiness)
+                run_time_list.append(np.round(end_time-start_time, 2))
 
     df_new = pd.DataFrame({
             "voting_scheme": vs_list,
             "n_voters": v_list,
             "n_candidates": c_list,
             "strat_voting_risk": strat_voting_list,
-            "avg_happiness": happiness_list
+            "avg_happiness": happiness_list,
+            "run_time": run_time_list
         })
     df_overall = pd.concat((df, df_new), axis=0)
-    df_overall.to_csv(target_file)
+    df_overall.to_csv(TARGET_FILE, index=True)
 
 
-def visualize():
+### Weird plotly magic
+# import plotly
+# plotly.io.orca.config.executable = "C:\\Users\\alexa\\AppData\\Roaming\\npm\\orca.cmd"
+# plotly.io.orca.config.save()
+
+viridis = [
+    "#440154","#440558","#450a5c","#450e60","#451465","#461969",
+    "#461d6d","#462372","#472775","#472c7a","#46307c","#45337d",
+    "#433880","#423c81","#404184","#3f4686","#3d4a88","#3c4f8a",
+    "#3b518b","#39558b","#37598c","#365c8c","#34608c","#33638d",
+    "#31678d","#2f6b8d","#2d6e8e","#2c718e","#2b748e","#29788e",
+    "#287c8e","#277f8e","#25848d","#24878d","#238b8d","#218f8d",
+    "#21918d","#22958b","#23988a","#239b89","#249f87","#25a186",
+    "#25a584","#26a883","#27ab82","#29ae80","#2eb17d","#35b479",
+    "#3cb875","#42bb72","#49be6e","#4ec16b","#55c467","#5cc863",
+    "#61c960","#6bcc5a","#72ce55","#7cd04f","#85d349","#8dd544",
+    "#97d73e","#9ed93a","#a8db34","#b0dd31","#b8de30","#c3df2e",
+    "#cbe02d","#d6e22b","#e1e329","#eae428","#f5e626","#fde725"
+]
+
+custom_viridis = [
+    "#440154", # "#461969",
+    "#461d6d", # "#45337d",
+    "#433880","#3c4f8a",
+    "#3b518b",# "#33638d",
+    "#31678d",# "#29788e",
+    "#287c8e","#218f8d",
+    "#21918d",# "#25a186",
+    "#25a584",# "#35b479",
+    "#3cb875","#5cc863",
+    "#61c960",# "#8dd544",
+    "#97d73e",# "#c3df2e",
+    "#cbe02d","#fde725"
+]
+
+def visualize_runtimes():
     """Visualize experiment data per voting schme"""
-    pass
+    if not os.path.exists(FIG_DIR):
+        os.mkdir(FIG_DIR)
+    df = pd.read_csv(TARGET_FILE, index_col=0)
+    # fig = make_subplots(rows=2, cols=2)
+    # current_row = 1
+    # current_col = 1
+    for i in df["voting_scheme"].unique():
+        # current_col = (current_row+1)%2
+        # if current_col==2:
+            # current_row = (current_col+1)%2
+        df_plt = df.loc[df.voting_scheme==i, :]
+        fig = px.histogram(df_plt, x="n_candidates", y="n_voters", color="run_time",
+            color_discrete_sequence=custom_viridis, width=800, height=800)
+        fig.write_image(os.path.join(FIG_DIR, str(i)).replace(" ", "_")+"_runtime.png")
 
+visualize_runtimes()
 
+def visualize_strat_risk():
+    if not os.path.exists(FIG_DIR):
+        os.mkdir(FIG_DIR)
+    df = pd.read_csv(TARGET_FILE, index_col=0)
+    for i in df["voting_scheme"]:
+        df_plt = df.loc[df.voting_scheme==i, :]
+        fig = px.scatter(df_plt, x="n_candidates", y="n_voters", size=8, 
+            color="strat_voting_risk", color_continuous_scale=px.colors.sequential.Viridis, width=800, height=800)
+        fig.write_image(os.path.join(FIG_DIR, str(i)).replace(" ", "_")+"_strat_voting.png")
 
+visualize_strat_risk()
+    
+    
+    
+# sns.jointplot(data=df, x="n_candidates", y="n_voters", color="run_time")
+# sns.jointplot(data=df, x="n_candidates", y="n_voters",)
 

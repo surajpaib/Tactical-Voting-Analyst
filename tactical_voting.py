@@ -31,7 +31,10 @@ class TacticalVoting:
                 bullet_pref_mat[0, voter] = candidate
 
                 tactical_results = self.vsr.voting_simulation(bullet_pref_mat, self.scheme)
-                del tactical_results[0]  # Delete the '0' candidate
+                try:
+                    del tactical_results[0]  # Delete the '0' candidate
+                except KeyError:
+                    pass
                 tactical_happiness = self.vsr.get_happiness(self.pref_mat, tactical_results)
                 happiness_gain = tactical_happiness[voter] - happiness[voter]
                 str_tactical_results = dict(zip([chr(i) for i in tactical_results.keys()], tactical_results.values()))

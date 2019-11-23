@@ -4,10 +4,12 @@ from tactical_voting import TacticalVoting as TV
 from itertools import permutations
 import numpy as np
 
-def integration_MxN(n_candidates, n_voters, voting_scheme):
+def integration_MxN(n_candidates, n_voters, voting_scheme, seed=None):
     """
     @param voting_scheme: one of the four voting schemes
     """
+    if seed != None:
+        np.random.seed(seed)
     candidates_num = range(65, 65+n_candidates)
     candidates = [str(chr(i)) for i in candidates_num]
     pref_list = list(permutations(candidates_num))

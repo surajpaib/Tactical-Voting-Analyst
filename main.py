@@ -62,5 +62,5 @@ if __name__ == "__main__":
                 print("\t{}\t: {}".format(k, v))
             print()
 
-    strat_voting_risk = sum([1 if len(i)>0 else 0 for i in tv.strategic_voting_options]) /pc.num_voters
+    strat_voting_risk = sum([1 if len(i)>0 else 0 for i in tv.strategic_voting_options]) / pc.num_voters
     print("\nOverall risk of strategic voting: {}".format(strat_voting_risk))
