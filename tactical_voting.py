@@ -54,7 +54,7 @@ class TacticalVoting:
             for c1 in range(self.n_candidates):  # candidate 1
                 for c2 in range(self.n_candidates):  # candidate 2
                     # tactic: swap candidates c1 and c2
-                    if (c1==c2) or (c2<c1):
+                    if (c1 >= c2):
                         continue
                     comp_pref = np.copy(self.pref_mat)                    
                     comp_pref[c1, voter], comp_pref[c2, voter] = comp_pref[c2, voter], comp_pref[c1, voter]
