@@ -19,7 +19,7 @@ def integration_MxN(n_candidates, n_voters, voting_scheme):
               "num_candidates": n_candidates,
               "candidate_list": candidates,
               "pref_mat": pref_mat,
-              "scheme": voting_scheme}  # scheme is not 2 as in manual selection
+              "scheme": voting_scheme}
     pc = PC(**params)
     vsr = VSR()
     vsr.voting_simulation(pc.pref_mat, pc.scheme)
