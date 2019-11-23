@@ -36,60 +36,67 @@ class TacticalVoting:
                 happiness_gain = tactical_happiness[voter] - happiness[voter]
                 str_tactical_results = dict(zip([chr(i) for i in tactical_results.keys()], tactical_results.values()))
                 if happiness_gain > 0:
+                    voter_num = voter +1
+                    print_gain = np.round(happiness_gain, 3)
                     self.strategic_voting_options[voter].append({
                         "Preference list": [chr(i).replace('\x00','') for i in bullet_pref_mat[:, voter]],
-                        "Voting result": str_tactical_results,
-                        "Happiness": sum(tactical_happiness),
-                        "Description": "Happiness of voter {} increased by : {} due to voting only for {}".format(voter, happiness_gain, chr(candidate))
+                        "Voting result": deepcopy(str_tactical_results),
+                        "New happiness": np.copy(sum(tactical_happiness)),
+                        "Description": "Happiness of voter {} increased by : {} due to voting only for {}".format(
+                            voter_num, print_gain, chr(candidate))
                     })
 
     def compromising_strategy(self):
         """Tactical voting by ranking alternatives insincerely higher (lower)"""
         happiness = self.vsr.get_happiness(self.pref_mat, self.voting_outcome)
 
-        # for voter in range(self.n_voters):
-        #     # create (n_candidates!)x(n_candidates) permutation matrix
-        #     permutation_mat = np.array(list(permutations(self.pref_mat[:, voter])))
-        #     for i in range(permutation_mat.shape[0]):
-        #         comp_pref = np.copy(self.pref_mat)
-        #         comp_pref[:, voter] = permutation_mat[i, :]
-
-        #         tactical_results = self.vsr.voting_simulation(comp_pref, self.scheme)
-        #         tactical_happiness = self.vsr.get_happiness(comp_pref, tactical_results)
-        #         happiness_gain = tactical_happiness[voter] - happiness[voter]
-        #         str_tactical_results = dict(zip([chr(i) for i in tactical_results.keys()], tactical_results.values()))
-        #         if happiness_gain > 0:
-        #             # TODO: change voting results to alphabetical!
-        #             self.strategic_voting_options[voter].append({
-        #                 "Preference list": [chr(i) for i in comp_pref[:, voter]],
-        #                 "Voting results": str_tactical_results,
-        #                 "Happiness:": sum(tactical_happiness),
-        #                 "Description": "Happiness of voter {} increased by : {} due to reordering of preferences".format(
-        #                     voter, happiness_gain)                        
-        #             })
-
-        # # Corrected, but still not what we want
         for voter in range(self.n_voters):
             for c1 in range(self.n_candidates):  # candidate 1
                 for c2 in range(self.n_candidates):  # candidate 2
                     # tactic: swap candidates c1 and c2
-                    if c1==c2:
+                    if (c1==c2) or (c2<c1):
                         continue
                     comp_pref = np.copy(self.pref_mat)                    
                     comp_pref[c1, voter], comp_pref[c2, voter] = comp_pref[c2, voter], comp_pref[c1, voter]
-
                     tactical_results = self.vsr.voting_simulation(comp_pref, self.scheme)
                     tactical_happiness = self.vsr.get_happiness(self.pref_mat, tactical_results)
                     happiness_gain = tactical_happiness[voter] - happiness[voter]
                     str_tactical_results = dict(zip([chr(i) for i in tactical_results.keys()], tactical_results.values()))
-
-                    voting_option = {
-                        "Preference list": [chr(i) for i in comp_pref[:, voter]],
-                        "Voting results": str_tactical_results,
-                        "Happiness:": sum(tactical_happiness),
-                        "Description": "Happiness of voter {} increased by : {} due to reordering of preferences".format(
-                            voter, happiness_gain)                        
-                    }
                     if happiness_gain > 0:
-                        if voting_option not in self.strategic_voting_options[voter]:
-                            self.strategic_voting_options[voter].append(voting_option)
+                        c1_name = chr(self.pref_mat[c1, voter])
+                        c2_name = chr(self.pref_mat[c2, voter])
+                        voter_num = voter +1
+                        print_gain = np.round(happiness_gain, 3)
+                        self.strategic_voting_options[voter].append({
+                            "Preference list": [chr(i) for i in comp_pref[:, voter]],
+                            "Voting results": deepcopy(str_tactical_results),
+                            "New happiness": np.copy(sum(tactical_happiness)),
+                            "Description": "Happiness of voter {} increased by {} due to swapping {} with {}".format(
+                                voter_num, print_gain, c1_name, c2_name)                       
+                        })
+
+    def compromising_strategy_permutations(self):
+        """Compromising using permutations"""
+        happiness = self.vsr.get_happiness(self.pref_mat, self.voting_outcome)
+        for voter in range(self.n_voters):
+            # create (n_candidates!)x(n_candidates) permutation matrix
+            permutation_mat = np.array(list(permutations(self.pref_mat[:, voter])))
+            for i in range(permutation_mat.shape[0]):
+                comp_pref = np.copy(self.pref_mat)
+                comp_pref[:, voter] = permutation_mat[i, :]
+
+                tactical_results = self.vsr.voting_simulation(comp_pref, self.scheme)
+                tactical_happiness = self.vsr.get_happiness(comp_pref, tactical_results)
+                happiness_gain = tactical_happiness[voter] - happiness[voter]
+                str_tactical_results = dict(zip([chr(i) for i in tactical_results.keys()], tactical_results.values()))
+                if happiness_gain > 0:
+                    voter_num = voter +1
+                    print_gain = np.round(happiness_gain, 3)
+                    self.strategic_voting_options[voter].append({
+                        "Preference list": [chr(i) for i in comp_pref[:, voter]],
+                        "Voting results": deepcopy(str_tactical_results),
+                        "New happiness": np.copy(sum(tactical_happiness)),
+                        "Description": "Happiness of voter {} increased by : {} due to reordering of preferences".format(
+                                voter_num, print_gain)  
+                    })
+

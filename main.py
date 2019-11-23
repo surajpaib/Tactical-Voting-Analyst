@@ -7,7 +7,7 @@ import integration_tests as IT
 if __name__ == "__main__":
     modes = {1: "Manual Input",
              2: "Integration test: 2 candidates, 3 voters, voting for two",
-             3: "Integration test: M candidates, N voters, pick a voting scheme"}
+             3: "Integration test: M candidates, N voters, pick a voting scheme, random preferences"}
     for k, v in modes.items():
         print("{}: {}".format(k, v))
     mode = input("\nPlease choose one of the options listed [1/2/3]\n")
@@ -37,7 +37,6 @@ if __name__ == "__main__":
     else:
         print("Invalid Input")
         exit()
-    print(pc.pref_mat)
     str_pref_mat = [[chr(j) for j in i] for i in pc.pref_mat]
     print("\nPreference matrix:")
     for i in str_pref_mat:
@@ -45,7 +44,8 @@ if __name__ == "__main__":
 
     # Non-strategic voting
     overall_happiness = sum(vsr.get_happiness(pc.pref_mat, vsr.results))
-    print("\nNon-strategic voting outcome: {}".format(vsr.results))
+    str_results = dict(zip([chr(i) for i in vsr.results.keys()], vsr.results.values()))
+    print("\nNon-strategic voting outcome: {}".format(str_results))
     print("Overall voter happiness level: {}".format(overall_happiness))
 
     # Bullet voting
@@ -55,7 +55,8 @@ if __name__ == "__main__":
     tv.compromising_strategy()
 
     for i, options in enumerate(tv.strategic_voting_options):
-        print("\nOptions for voter {}:".format(i))
+        voter_num = i+1
+        print("\nOptions for voter {}:".format(voter_num))
         for option in options:
             for k, v in option.items():
                 print("\t{}\t: {}".format(k, v))
