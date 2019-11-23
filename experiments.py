@@ -62,6 +62,10 @@ def experiment(max_n_candidates, max_n_voters):
     df_overall.to_csv(target_file)
 
 
+def visualize():
+    """Visualize experiment data per voting schme"""
+    pass
+
 
 
 
