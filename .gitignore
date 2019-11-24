@@ -3,5 +3,6 @@ experiments/
 tva/
 utils/
 build/
+submissions/
 freeze.py
 playground.py
