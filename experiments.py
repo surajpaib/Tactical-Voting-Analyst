@@ -117,39 +117,26 @@ custom_viridis = [
     "#cbe02d","#fde725"
 ]
 
-def visualize_runtimes():
+
+
+def visualize():
     """Visualize experiment data per voting schme"""
     if not os.path.exists(FIG_DIR):
         os.mkdir(FIG_DIR)
     df = pd.read_csv(TARGET_FILE, index_col=0)
-    # fig = make_subplots(rows=2, cols=2)
-    # current_row = 1
-    # current_col = 1
     for i in df["voting_scheme"].unique():
-        # current_col = (current_row+1)%2
-        # if current_col==2:
-            # current_row = (current_col+1)%2
         df_plt = df.loc[df.voting_scheme==i, :]
-        fig = px.histogram(df_plt, x="n_candidates", y="n_voters", color="run_time",
-            color_discrete_sequence=custom_viridis, width=800, height=800)
-        fig.write_image(os.path.join(FIG_DIR, str(i)).replace(" ", "_")+"_runtime.png")
 
-visualize_runtimes()
-
-def visualize_strat_risk():
-    if not os.path.exists(FIG_DIR):
-        os.mkdir(FIG_DIR)
-    df = pd.read_csv(TARGET_FILE, index_col=0)
-    for i in df["voting_scheme"]:
-        df_plt = df.loc[df.voting_scheme==i, :]
-        fig = px.scatter(df_plt, x="n_candidates", y="n_voters", size=8, 
+        # strat_voting image
+        fig = px.scatter(df_plt, x="n_candidates", y="n_voters", size="strat_voting_risk",
             color="strat_voting_risk", color_continuous_scale=px.colors.sequential.Viridis, width=800, height=800)
         fig.write_image(os.path.join(FIG_DIR, str(i)).replace(" ", "_")+"_strat_voting.png")
 
-visualize_strat_risk()
+        # runtime image
+        fig = px.histogram(df_plt, x="n_candidates", y="n_voters", color="run_time",
+            color_discrete_sequence=custom_viridis, width=800, height=800)
+        # TODO: rename y axis
+        fig.write_image(os.path.join(FIG_DIR, str(i)).replace(" ", "_")+"_runtime.png")
     
-    
-    
-# sns.jointplot(data=df, x="n_candidates", y="n_voters", color="run_time")
-# sns.jointplot(data=df, x="n_candidates", y="n_voters",)
+visualize()
 
