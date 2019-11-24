@@ -6,7 +6,6 @@
 from preference_creator import PreferenceCreator as PC
 from voting_schemes_runner import VotingSchemesRunner as VSR
 from tactical_voting import TacticalVoting as TV
-from utils.plotly_colours import get_colours
 from itertools import permutations
 import integration_tests
 import numpy as np
@@ -28,19 +27,6 @@ TARGET_FILE = "experiments/log.csv"
 def experiment(max_n_candidates, max_n_voters):
     if not os.path.exists(TARGET_DIR):
         os.mkdir(TARGET_DIR)
-    if not os.path.exists(TARGET_FILE):
-        df = pd.DataFrame({
-            "voting_scheme": [],
-            "n_voters": [],
-            "n_candidates": [],
-            "strat_voting_risk": [],
-            "avg_happiness": [],
-            "run_time": []
-        })
-        df.to_csv(TARGET_FILE, index=True)
-    else:
-        df = pd.read_csv(TARGET_FILE, index_col=0)
-
     voting_schemes = ['1: Plurality Voting', '2: Voting for two', '3: Anti-Plurality Voting', '4: Borda Voting']
     vs_list = []
     v_list = []
@@ -78,9 +64,7 @@ def experiment(max_n_candidates, max_n_voters):
             "avg_happiness": happiness_list,
             "run_time": run_time_list
         })
-    df_overall = pd.concat((df, df_new), axis=0)
-    df_overall.to_csv(TARGET_FILE, index=True)
-
+    df_new.to_csv(TARGET_FILE, index=True)
 
 ### Weird plotly magic
 # import plotly
@@ -117,8 +101,6 @@ custom_viridis = [
     "#cbe02d","#fde725"
 ]
 
-
-
 def visualize():
     """Visualize experiment data per voting schme"""
     if not os.path.exists(FIG_DIR):
@@ -129,14 +111,29 @@ def visualize():
 
         # strat_voting image
         fig = px.scatter(df_plt, x="n_candidates", y="n_voters", size="strat_voting_risk",
-            color="strat_voting_risk", color_continuous_scale=px.colors.sequential.Viridis, width=800, height=800)
+            color="strat_voting_risk", color_continuous_scale=px.colors.sequential.Viridis,
+            width=800, height=800).update_layout(
+            xaxis_title="Number of Candidates",
+            yaxis_title="Number of Voters",
+            font=dict(
+                family="Courier New, monospace",
+                size=18,
+                color="#cfcfcf"))
         fig.write_image(os.path.join(FIG_DIR, str(i)).replace(" ", "_")+"_strat_voting.png")
 
-        # runtime image
+        # run time image
         fig = px.histogram(df_plt, x="n_candidates", y="n_voters", color="run_time",
-            color_discrete_sequence=custom_viridis, width=800, height=800)
+            color_discrete_sequence=custom_viridis, width=800, height=800).update_layout(
+            xaxis_title="Number of Candidates",
+            yaxis_title="Number of Voters",
+            font=dict(
+                family="Courier New, monospace",
+                size=18,
+                color="#cfcfcf"))
         # TODO: rename y axis
         fig.write_image(os.path.join(FIG_DIR, str(i)).replace(" ", "_")+"_runtime.png")
-    
-visualize()
+
+if __name__ == "__main__":
+    experiment(10, 10)
+    visualize()
 

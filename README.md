@@ -12,6 +12,10 @@ You can then choose to run one of the test cases defined in "integration_tests.p
 or manually select a voting scheme, and enter voters, candidates and preferences.
 
 ## Tests
-
-To run the test cases, run
+To run unit test cases, run
 ```python3 tests.py```
+
+## Experiments
+To run an experiment stack, run
+````python3 experiments.py```  # Visualization requires setup of plotly-express
+
