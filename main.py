@@ -5,7 +5,7 @@ import integration_tests as IT
 
 
 if __name__ == "__main__":
-    modes = {1: "Manual Input",
+    modes = {1: "Manual input",
              2: "Integration test: 2 candidates, 3 voters, voting for two",
              3: "Integration test: M candidates, N voters, pick a voting scheme, random preferences"}
     for k, v in modes.items():
