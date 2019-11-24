@@ -118,7 +118,7 @@ def visualize():
             font=dict(
                 family="Courier New, monospace",
                 size=18,
-                color="#cfcfcf"))
+                color="#3f3f3f"))
         fig.write_image(os.path.join(FIG_DIR, str(i)).replace(" ", "_")+"_strat_voting.png")
 
         # run time image
@@ -129,7 +129,7 @@ def visualize():
             font=dict(
                 family="Courier New, monospace",
                 size=18,
-                color="#cfcfcf"))
+                color="#3f3f3f"))
         # TODO: rename y axis
         fig.write_image(os.path.join(FIG_DIR, str(i)).replace(" ", "_")+"_runtime.png")
 

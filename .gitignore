@@ -1,6 +1,7 @@
-playground.py
 __pycache__/
 experiments/
 tva/
+utils/
+build/
 freeze.py
-utils
+playground.py
