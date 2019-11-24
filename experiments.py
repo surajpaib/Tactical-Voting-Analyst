@@ -108,10 +108,12 @@ def visualize():
     df = pd.read_csv(TARGET_FILE, index_col=0)
     for i in df["voting_scheme"].unique():
         df_plt = df.loc[df.voting_scheme==i, :]
+        df_plt.rename(columns={"strat_voting_risk": "Risk",
+                       "run_time": "Time"}, inplace=True)
 
         # strat_voting image
-        fig = px.scatter(df_plt, x="n_candidates", y="n_voters", size="strat_voting_risk",
-            color="strat_voting_risk", color_continuous_scale=px.colors.sequential.Viridis,
+        fig = px.scatter(df_plt, x="n_candidates", y="n_voters", size="Risk",
+            color="Risk", color_continuous_scale=px.colors.sequential.Viridis,
             width=800, height=800).update_layout(
             xaxis_title="Number of Candidates",
             yaxis_title="Number of Voters",
@@ -122,7 +124,7 @@ def visualize():
         fig.write_image(os.path.join(FIG_DIR, str(i)).replace(" ", "_")+"_strat_voting.png")
 
         # run time image
-        fig = px.histogram(df_plt, x="n_candidates", y="n_voters", color="run_time",
+        fig = px.histogram(df_plt, x="n_candidates", y="n_voters", color="Time",
             color_discrete_sequence=custom_viridis, width=800, height=800).update_layout(
             xaxis_title="Number of Candidates",
             yaxis_title="Number of Voters",
